@@ -1,0 +1,16 @@
+
+server:
+  port: 7500
+
+spring:
+    application:
+        name: ms-credentials-service
+    datasource:
+        driverClassName: org.postgresql.Driver
+        hikari:
+            idle-timeout: 600000
+            maximum-pool-size: 5
+            minimum-idle: 2
+        password: k3ric0
+        url: jdbc:postgresql://pg-docker:5432/monoscrito
+        username: postgres

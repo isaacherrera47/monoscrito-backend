@@ -1,0 +1,35 @@
+pipeline {
+  agent any
+  tools {
+      maven 'maven' 
+      jdk 'openjdk-11' 
+  }
+  environment {
+      DOCKER_DOCKERFILE = "cicd/Dockerfile"
+      DOCKER_IMAGE_NAME = "monoscrito/monoscrito-service"
+      DOCKER_IMAGE_TAG = "0.1"
+      DOCKER_CONTAINER_NAME = "monoscrito-service"
+      DOCKER_HOSTNAME = "monoscrito-service"
+      APP_SPRING_PROFILE = "dev"
+      APP_SPRING_OUTER_PORT = "7500"
+      APP_SPRING_INNER_PORT = "7500"
+  }
+  stages {
+    stage('Build') {
+      steps {
+        sh "mvn clean package -DskipTests=true"
+      }
+    }
+    stage('Docker Build') {
+      steps {
+        sh "docker build -f ${DOCKER_DOCKERFILE} -t ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} ."
+      }
+    }
+    stage('Deploy') {
+      steps {
+        sh "chmod -v 776 ./cicd/deploy.sh"
+        sh "./cicd/deploy.sh"
+      }
+    }
+  }
+}
